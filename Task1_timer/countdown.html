@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="countdown.css"/>
+  </head>
+  <body>
+    <center>
+
+    <h2><i>Hey!! What's the name of your event??</i></h2>
+    <input type="text" id="event_name" placeholder="Enter your event name" autocomplete="off"//>
+    <h2><i>Enter your event deadline below..</i></h2>
+
+    <div id="event_date">
+      <h4>Date(dd/mm/yyyy)</h4>
+
+      <input type="number" id="date" min="1" max="31" placeholder="Enter date" autocomplete="off"//>
+      <input type="number" min="1" max="12" id="month" placeholder="Enter month" autocomplete="off"//>
+      <input type="number" id="year" min="2016" placeholder="Enter year" autocomplete="off"/>
+
+      <h4>Time (in 24 hour format)</h4>
+
+      <input type="number" id="hours" min="0" max="23" placeholder="Enter hours" autocomplete="off"//>
+      <input type="number" id="minutes" min="0" max="59" placeholder="Enter minutes" autocomplete="off"//>
+    </div>
+
+    <br/><br/>
+
+    <div id="controls">  
+      <button type="button" id="start" onclick="startCount()">Start</button>
+      <button type="button" id="stop" onclick="stopCount()">Stop</button>
+      <button type="button" id="reset" onclick="resetCount()">Reset</button>
+    </div>
+  </center>
+
+    <br/><br/>
+
+    <div>
+      <div class="timer" id="Days" style="left:21%">00  <br/>Days</div>
+      <div class="timer" id="Hours" style="left:36%">00 <br/>Hours</div>
+      <div class="timer" id="Mins" style="left:51%">00 <br/>Minutes</div>
+      <div class="timer" id="Secs" style="left:66%">00 <br/>Seconds</div>
+    </div>
+
+    <script src="date_validate.js" type="text/javascript"></script>
+    <script src="countdown.js" type="text/javascript"></script>
+
+  </body>
+</html>

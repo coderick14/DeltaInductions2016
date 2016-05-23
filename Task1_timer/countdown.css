@@ -1,0 +1,46 @@
+body {
+  background-image: url('galaxy.jpg');
+}
+h2,h4 {
+  color: white;
+  font-family: Arial,Helvetica,sans-serif;
+}
+#event_date,#controls {
+  display: inline;
+}
+.timer
+{
+  float:left;
+  position: absolute;
+  font-size:24px;
+  text-align: center;
+  margin: 8px;
+  height:100px;
+  width :100px;
+  padding: 5px;
+  border-radius: 8px;
+  border: 2px solid lightgray;
+  color: white;
+}
+input[type=text]
+{
+  width:150px;
+  height: 30px;
+  padding:5px;
+  border-radius:8px;
+  text-align: center;
+  transition: width 0.5s ease-in-out;
+  -moz-transition: width 0.5s ease-in-out;
+  -webkit-transition: width 0.5s ease-in-out;
+}
+input[type=text]:focus
+{
+  width:400px;
+}
+input[type=number]
+{
+  height:30px;
+  width:110px;
+  border-radius: 7px;
+  text-align: center;
+}
