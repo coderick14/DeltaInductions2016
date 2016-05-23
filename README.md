@@ -1,1 +1,1 @@
-This repo contains all the code Delta WebDev Inductions 2016.
+This repo contains all the code for Delta WebDev Inductions 2016.
