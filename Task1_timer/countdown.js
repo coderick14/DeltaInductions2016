@@ -54,9 +54,11 @@ function stopCount()
 function resetCount()
 {
   clearInterval(x);
-  document.getElementById('Days').innerHTML='00'+'<br/> '+'Days';
-  document.getElementById('Hours').innerHTML='00'+'<br/> '+'Hours';
-  document.getElementById('Mins').innerHTML='00'+'<br/>'+'Minutes';
-  document.getElementById('Secs').innerHTML='00'+'<br/>'+'Seconds';
-  location.reload();
+  var arr=['Days','Hours','Minutes','Seconds'];
+  var fields=document.getElementsByTagName('input');
+  for(i=0;i<fields.length;i++)
+    fields[i].value=fields[i].defaultValue;
+  var timeLeft=document.getElementsByClassName('timer');
+  for(i=0;i<timeLeft.length;i++)
+      timeLeft[i].innerHTML='00'+'<br/>'+arr[i];
 }
