@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Tree using fractals</title>
+    <meta charset="utf-8">
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      <canvas id="myTree" height="500" width="500"></canvas>
+    </center>
+    <script type="text/javascript">
+      var canvas=document.getElementById('myTree');
+      var ctx=canvas.getContext("2d");
+      function drawBranches(startX,startY,trunkWidth,level)
+      {
+
+        if(level < 14)
+        {
+          var deltaX=100/level;
+          var deltaY=200/level;
+          var rightX=startX+Math.random()*deltaX;
+          var rightY=startY-Math.random()*deltaY;
+          var leftX=startX-Math.random()*deltaX;
+          var leftY=startY-Math.random()*deltaY;
+
+          //draw right part
+          ctx.beginPath();
+          ctx.moveTo(startX+trunkWidth/4,startY);
+          ctx.quadraticCurveTo(startX+trunkWidth/4,startY-trunkWidth,rightX,rightY);
+          ctx.lineWidth=trunkWidth;
+          ctx.lineCap='round';
+          ctx.stroke();
+
+          //draw left part
+          ctx.beginPath();
+          ctx.moveTo(startX-trunkWidth/4,startY);
+          ctx.quadraticCurveTo(startX-trunkWidth/4,startY-trunkWidth,leftX,leftY);
+          ctx.lineWidth=trunkWidth;
+          ctx.lineCap='round';
+          ctx.stroke();
+
+          drawBranches(rightX,rightY,trunkWidth*0.7,level+1);
+          drawBranches(leftX,leftY,trunkWidth*0.7,level+1);
+        }
+      }
+      drawBranches(canvas.width/2,canvas.height,50,1);
+    </script>
+  </body>
+</html>
