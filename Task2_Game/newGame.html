@@ -29,33 +29,55 @@
     <center>
       <canvas id="myCanvas" width="900" height="400"></canvas>
       <h2>Score : <span id="score">0</span></h2>
-      <button type="button" id="replay" onclick='location.reload()'>Play again</button>
+      <button type="button" id="replay">Play again</button>
     </center>
   </body>
   <script type="text/javascript">
     function spriteObj() {
       var that = {};
+      ticksPerFrame=4;
+      tickUpdate=0;
+      tickRender=0;
       inc=1;
-      jumpspeed=-3;
+      jumpspeed=-5;
       jumpY = 283;
       frameIndexX=0;
       frameIndexY=false;
       that.width = 320;
       that.height = 467;
       that.image = image;
-      that.updateMove = function() {
-          frameIndexX+=1;
-          if(frameIndexX == 3) {
-            frameIndexX = 0;
-            frameIndexY = !frameIndexY;
-          }
-      }
-      that.renderMove = function() {
-        ctx.clearRect(40,283,90,75);
+      that.begin = function() {
         ctx.drawImage(that.image,frameIndexX*that.width,frameIndexY*that.height+3,that.width,that.height,40,283,80,85);
+        ctx.drawImage(road,0,0,1300,80,0,360,900,40);
+      }
+      that.updateMove = function() {
+        if(!jumpStatus) {
+            tickUpdate+=1;
+            if(tickUpdate >ticksPerFrame) {
+              tickUpdate = 0;
+              frameIndexX+=1;
+              if(frameIndexX == 3) {
+                frameIndexX = 0;
+                frameIndexY = !frameIndexY;
+              }
+            }
+          }
+            score.innerHTML = count;
+            count+=1;
+          }
+
+      that.renderMove = function() {
+        if(!jumpStatus) {
+          tickRender+=1;
+          if(tickRender > ticksPerFrame) {
+            tickRender = 0;
+            ctx.clearRect(40,283,90,75);
+            ctx.drawImage(that.image,frameIndexX*that.width,frameIndexY*that.height+3,that.width,that.height,40,283,80,85);
+          }
+        }
       }
       that.renderJump = function() {
-        ctx.clearRect(40,jumpY,90,77);
+        ctx.clearRect(40,jumpY,90,79);
         jumpY+=jumpspeed;
         ctx.drawImage(that.image,frameIndexX*that.width,frameIndexY*that.height+3,that.width,that.height,40,jumpY,80,85);
         if(jumpY == 148) {
@@ -67,44 +89,58 @@
         }
         return 1;
       }
+      that.drawMines = function() {
+              for(var i=0;i<5;i++) {
+
+              ctx.clearRect(obsX[i],310,60,50);
+              ctx.drawImage(mines,0,0,223,226,obsX[i],310,50,50);
+
+              if(obsX[i]<110 && obsX[i]>-10 && jumpY>235) {   //collision detection
+                ctx.clearRect(obsX[i],310,60,50);
+                clearInterval(tgame);
+                ctx.drawImage(blast,0,0,600,475,obsX[i],270,90,90);
+                bomb.play();
+                canvas.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                ctx.drawImage(sign,0,0,804,464,400,0,500,275);
+                ctx.drawImage(over,0,0,804,464,0,0,400,275);
+                replay.style.visibility = 'visible';
+                dead.play();
+
+              }
+              obsX[i]-=5;
+              if(obsX[i] == -60) {
+                obsX[i] = obsX[(i+4)%5]+aux[i];
+              }
+          }
+        };
       return that;
     }
-    drawMines = (function() {
-      var obsX = [1000,1400,1700,2150,2400];
-      var aux = [400,450,500,300,350];
-      return function() {
-        for(var i=0;i<5;i++) {
 
-            ctx.clearRect(obsX[i],310,60,50);
-            ctx.drawImage(mines,0,0,223,226,obsX[i],310,50,50);
+    function playAgain() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      runner.begin();
+      canvas.style.backgroundColor = "azure";
+      replay.style.visibility = "hidden";
+      obsX = [1000,1400,1700,2150,2400];
+      score.innerHTML = 0;
+      gameStarted = 0;
+      count = 0;
+      jumpStatus = 0;
+      tickUpdate=0;
+      tickRender=0;
+      inc=1;
+      jumpY = 283;
+      frameIndexX=0;
+      frameIndexY=false;
+    }
 
-            if(obsX[i]<105 && obsX[i]>-10 && jumpY>235) {   //collision detection
-              ctx.clearRect(obsX[i],310,60,50);
-              clearInterval(to);
-              clearInterval(ts);
-              clearInterval(tj);
-              clearInterval(tp);
-              ctx.drawImage(blast,0,0,600,475,obsX[i],270,90,90);
-              bomb.play();
-              canvas.style.backgroundColor = 'rgba(0,0,0,0.7)';
-              ctx.drawImage(sign,0,0,804,464,400,0,500,275);
-              ctx.drawImage(over,0,0,804,464,0,0,400,275);
-              replay.style.visibility = 'visible';
-              dead.play();
-
-            }
-            obsX[i]-=5;
-            if(obsX[i] == -60) {
-              obsX[i] = obsX[(i+4)%5]+aux[i];
-            }
-        }
-      }
-    })();
 
     //variable declarations
     var runner;
     var gameStarted = 0,jumpStatus = 0,count = 0;
-    var ts,tj,to,tp;
+    var tgame;
+    var obsX = [1000,1400,1700,2150,2400];
+    var aux = [400,450,500,300,350];
     var load = new Audio("load.mp3");
     var bomb = new Audio("bomb.mp3");
     var grunt = new Audio("grunt.wav");
@@ -126,47 +162,34 @@
     var replay = document.getElementById('replay');
     var ctx=canvas.getContext('2d');
 
+    replay.addEventListener("click",playAgain);
 
     window.onload = function() {
       runner = spriteObj();
-      runner.renderMove();
-      ctx.drawImage(road,0,0,1300,80,0,360,900,40)
+      runner.begin();
     }
-    function updateScore() {
-      score.innerHTML = count;
-      count+=1;
-    }
+
     function gameloop() {
       runner.updateMove();
       runner.renderMove();
-    }
-    function gameloopJump() {
-
-      jumpStatus = 1;
-      var flag = runner.renderJump();
-      if(flag == 0) {
-
-        clearInterval(tj);
-        jumpStatus = 0;
-        ts = setInterval(gameloop,80);
+      runner.drawMines();
+      if(jumpStatus) {
+        var flag = runner.renderJump();
+        if(flag == 0) {
+          jumpStatus = 0;
+        }
       }
     }
     document.onkeypress = function(event) {
       if(event.keyCode == 32) {
         if(!gameStarted) {
           gameStarted = 1;
-
           load.play();
-          ts = setInterval(gameloop,80);
-          to = setInterval(drawMines,17);
-          tp = setInterval(updateScore,500);
+          tgame = setInterval(gameloop,20);
         }
         else if(!jumpStatus ) {
-
-          clearInterval(ts);
+          jumpStatus = 1;
           grunt.play();
-          tj = setInterval(gameloopJump,7);
-
         }
       }
 
