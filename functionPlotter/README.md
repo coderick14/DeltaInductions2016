@@ -1,4 +1,4 @@
-###Plot the graph of a mathematical function using JavaScript and HTML5 <canvas> element  
+###Plot the graph of a mathematical function using JavaScript and HTML5 `<canvas>` element  
 + Enter the function as **JavaScript** function in the textbox. For example  
 ```javascript
 function (x)  {
